@@ -1,0 +1,29 @@
+{
+  "name": "ywonder-shop",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3020",
+    "build": "next build",
+    "start": "next start -p 3020",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "test:core": "node --test qa/product-delete.test.cjs qa/affiliate-mizi-approval.test.cjs"
+  },
+  "dependencies": {
+    "@ckeditor/ckeditor5-react": "^11.2.0",
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.3",
+    "ckeditor5": "^48.3.1",
+    "next": "14.2.18",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "prisma": "^6.19.3",
+    "typescript": "^5"
+  }
+}

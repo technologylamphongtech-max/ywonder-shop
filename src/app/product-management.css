@@ -1,0 +1,7 @@
+.product-row-actions{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px}
+.product-delete-button{border:1px solid #b34b4b!important;background:transparent!important;color:#b33434!important;font-weight:700}
+.product-delete-button:hover{background:#fff0ed!important}
+.product-delete-button:focus-visible{outline:3px solid #d85a52;outline-offset:2px}
+html[data-yw-theme="dark"] .product-delete-button{color:#ffaaaa!important;border-color:#bd6767!important}
+html[data-yw-theme="dark"] .product-delete-button:hover{background:#3c2027!important}
+@media(max-width:640px){.product-row-actions{justify-content:flex-start;width:100%}.product-row-actions button{min-height:40px}}

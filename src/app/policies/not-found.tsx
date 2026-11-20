@@ -1,0 +1,1 @@
+export default function PolicyNotFound(){return <main className="policy-container policy-missing"><h1>Không tìm thấy chính sách</h1><p>Vui lòng chọn một mục trong danh sách chính sách của YWonderShop.</p><a href="/policies">Về trang chính sách →</a></main>}

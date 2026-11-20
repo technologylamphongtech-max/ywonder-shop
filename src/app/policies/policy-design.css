@@ -1,0 +1,87 @@
+/* Policy directory and reading pages from the latest supplied storefront design. */
+.policy-site{--p-ink:#173d30;--p-muted:#4e6258;--p-rule:#dbe3d9;min-height:100vh;background:#fff!important;color:#192e26;font-family:'YW Montserrat',Arial,sans-serif}
+.policy-container{width:min(1344px,calc(100% - clamp(32px,7.6vw,134px)))}
+.policy-utility{background:#173e31;color:#f0f5ef;font-size:11px}
+.policy-utility>.policy-container{display:flex;justify-content:space-between;gap:16px;padding:7px 0}
+.policy-utility a{color:#f0f5ef;text-decoration:none}
+.policy-header{background:#fff!important;border-color:#dbe3d9!important}
+.policy-header>.policy-container{min-height:83px;padding:10px 0}
+.policy-header img{width:200px;max-height:62px;object-fit:contain}
+.policy-back{border:0;border-radius:40px;background:#f0f5ef;color:#173e31;font-size:13px;font-weight:650}
+.policy-back:hover{border:0;background:#e4efe5;color:#173e31}
+.policy-top-nav{display:flex;align-items:center;gap:34px;min-height:45px;border-top:1px solid #dbe3d9}
+.policy-top-nav a{align-self:stretch;display:flex;align-items:center;color:#46584e;text-decoration:none;font-size:13px;font-weight:550}
+.policy-top-nav a[aria-current]{color:#1c6548;border-bottom:3px solid #1c6548;font-weight:700}
+.policy-main{padding-top:0;padding-bottom:70px}
+.policy-breadcrumb{align-items:center;gap:8px;margin:0;padding:19px 0 17px;color:#4e6258!important;font-size:12px}
+.policy-breadcrumb a{color:#1c6548!important}
+.policy-layout{display:block}
+.policy-content{width:100%;min-width:0}
+.policy-kicker{color:#526c55;font-size:11px;letter-spacing:.11em}
+.policy-hub-hero{position:relative;isolation:isolate;display:grid;align-items:center;min-height:222px;overflow:hidden;padding:clamp(26px,3.1vw,46px);border-radius:14px;background:#f1eddd}
+.policy-hub-hero:before{content:'';position:absolute;inset:0 0 0 44%;z-index:-2;background:url('/assets/shop-design/collection-1.webp') center / cover no-repeat}
+.policy-hub-hero:after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#f4f0e3 45%,#f4f0e3eb 53%,#f4f0e347 70%,transparent 84%)}
+.policy-hub-hero>div{max-width:61%}
+.policy-hub-hero h1,.policy-article-head h1{margin:0;color:var(--p-ink);font-family:'YW Playfair',Georgia,serif;font-size:clamp(34px,3.15vw,58px);font-weight:550;line-height:1.16;letter-spacing:-.038em}
+.policy-hub-hero p{max-width:470px;margin:13px 0 0;color:#3c5145;font-size:15px;line-height:1.65}
+.policy-find{display:flex;align-items:center;gap:12px;max-width:535px;margin-top:25px;padding:0 15px;border:1px solid #a0b2a3;border-radius:9px;color:#43634d;background:#fff}
+.policy-find:focus-within{outline:2px solid #1c6548;outline-offset:2px}
+.policy-find svg{width:22px;height:22px;flex:none}
+.policy-find input{width:100%;height:48px;padding:7px 0;border:0;background:transparent;color:#192e26;font-size:15px}
+.policy-find input:focus-visible{outline:0}
+.policy-result,.policy-empty{margin:15px 0 0;color:var(--p-muted);font-size:14px}
+.policy-group{margin-top:clamp(28px,3vw,44px)}
+.policy-group h2{margin:0 0 15px;color:var(--p-ink);font-family:'YW Playfair',Georgia,serif;font-size:clamp(24px,2vw,33px);font-weight:550;letter-spacing:-.027em}
+.policy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.policy-card{display:flex;align-items:flex-start;gap:14px;min-width:0;padding:clamp(15px,1.5vw,24px);border:1px solid var(--p-rule);border-radius:11px;background:#fff;color:#192e26;text-decoration:none;transition:border-color .15s,background .15s}
+.policy-card:hover,.policy-card:focus-visible{border-color:#90a78d;background:#f7f9f3}
+.policy-card-icon{display:grid;place-items:center;flex:none;width:41px;height:41px;border-radius:12px;background:#e8efe3;color:#345a40}
+.policy-group:nth-of-type(3) .policy-card-icon{background:#f5ecdf;color:#775336}
+.policy-group:nth-of-type(4) .policy-card-icon{background:#eaf0f2;color:#435e67}
+.policy-card-icon svg{width:22px;height:22px}
+.policy-card-copy{min-width:0}
+.policy-card-copy strong{display:block;font-size:15px;font-weight:650;line-height:1.38}
+.policy-card-copy>span{display:block;margin-top:5px;color:var(--p-muted);font-size:13px;line-height:1.55}
+.policy-assist{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:32px;padding:22px clamp(17px,2.5vw,33px);border-radius:12px;background:var(--p-ink);color:#fff}
+.policy-assist strong{font-size:16px}
+.policy-assist p{margin:4px 0 0;color:#dfebe1;font-size:13px}
+.policy-assist-links{display:flex;flex-direction:column;gap:5px;flex:none}
+.policy-assist-links a{color:#fff;text-decoration:none}
+.policy-assist-links a:first-child{font-size:17px;font-weight:650}
+.policy-assist-links a:last-child{text-decoration:underline;text-underline-offset:3px;font-size:13px}
+.policy-article{padding:0;border:0;border-radius:0;background:transparent;color:#2c3b33}
+.policy-article-head{padding:clamp(20px,3vw,43px);border:1px solid #dce4d7;border-left:4px solid #7d9d73;border-radius:0 12px 12px 0;background:#f3f6ee}
+.policy-article-head h1{max-width:28ch;margin:9px 0;font-size:clamp(30px,2.85vw,48px)}
+.policy-updated{color:#455e4d;font-size:13px}
+.policy-reading{display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,24%);gap:clamp(22px,2.7vw,48px);align-items:start;margin-top:clamp(25px,2.7vw,40px)}
+.policy-document{min-width:0;max-width:76ch;font-size:15px;line-height:1.8}
+.policy-intro{margin:0;font-weight:550;color:#2c3b33}
+.policy-sections>section{padding-top:21px;margin-top:26px;border-top:1px solid var(--p-rule);scroll-margin-top:16px}
+.policy-sections h2{margin:0 0 11px;color:var(--p-ink);font-family:'YW Playfair',Georgia,serif;font-size:clamp(21px,1.68vw,28px);font-weight:600;line-height:1.36}
+.policy-sections p,.policy-sections li{color:#2c3b33;font-size:15px;line-height:1.8}
+.policy-sections ul{padding-left:1.45rem}
+.policy-sections li::marker{color:#637e60}
+.policy-contents{position:sticky;top:14px;padding:16px;border:1px solid var(--p-rule);border-radius:11px;background:#fff}
+.policy-contents h2{margin:0 0 11px;color:var(--p-ink);font-family:'YW Montserrat',Arial,sans-serif;font-size:15px;font-weight:650}
+.policy-contents ol{margin:0;padding-left:21px}
+.policy-contents li{padding:5px 0;font-size:13px;line-height:1.5}
+.policy-contents li::marker{color:#627766;font-weight:600}
+.policy-contents a{color:#2c3b33;text-decoration:none}
+.policy-contents a:hover{color:#1c6548;text-decoration:underline}
+.policy-directory{display:block;margin-top:10px;padding-top:12px;border-top:1px solid var(--p-rule);color:#1c6548!important;font-weight:650}
+.policy-bank-card{margin:16px 0 4px;padding:16px 19px;border:0;border-left:3px solid #ab8b50;border-radius:0 8px 8px 0;background:#f8f3e8}
+.policy-bank-label{color:#705d32;font-size:12px}
+.policy-bank-card p{color:#2c3b33}
+.policy-article-contact{margin-top:30px;padding:24px;border:1px solid var(--p-rule);border-radius:11px;background:#f8faf7}
+.policy-article-contact h2{color:var(--p-ink);font-family:'YW Playfair',Georgia,serif;font-size:22px}
+.policy-article-contact dt{color:#53685b}
+.policy-article-contact dd,.policy-article-contact a{color:#2c3b33}
+.policy-all-link{color:#1c6548}
+.policy-company-footer{padding:32px 0 38px;border-top:1px solid #456353;background:#173e31;color:#f0f5ef}
+.policy-footer-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:48px}
+.policy-company-footer :is(strong,p,a){color:#d9e5dc}
+.policy-company-footer .policy-kicker{color:#f4dca7}
+.policy-company-footer a:hover{color:#fff2ca}
+@media(max-width:1040px){.policy-reading{display:flex;flex-direction:column}.policy-document{max-width:none}.policy-contents{position:static;width:100%}.policy-contents ol{columns:2;column-gap:27px}.policy-contents li{break-inside:avoid}}
+@media(max-width:760px){.policy-grid{grid-template-columns:1fr;gap:8px}.policy-card{align-items:center}.policy-hub-hero{min-height:170px}.policy-hub-hero:before{left:55%}.policy-hub-hero:after{background:linear-gradient(90deg,#f4f0e3 52%,#f4f0e3cc 65%,#f4f0e320)}.policy-hub-hero>div{max-width:78%}.policy-assist{align-items:flex-start;flex-direction:column}.policy-container{width:calc(100% - 32px)}.policy-utility{display:none}.policy-top-nav{gap:18px;overflow-x:auto}.policy-top-nav a{white-space:nowrap}.policy-footer-grid{grid-template-columns:1fr;gap:22px}}
+@media(max-width:480px){.policy-header>.policy-container{min-height:65px}.policy-header img{width:160px}.policy-back{padding:8px 10px;font-size:11px}.policy-top-nav{min-height:42px}.policy-main{padding-bottom:38px}.policy-hub-hero{padding:19px}.policy-hub-hero h1{font-size:29px}.policy-hub-hero p{font-size:12px}.policy-find{margin-top:15px}.policy-find input{height:43px;font-size:13px}.policy-card{padding:13px}.policy-card-copy strong{font-size:14px}.policy-card-copy>span{font-size:12px}.policy-contents ol{columns:1}.policy-article-head h1{font-size:29px}.policy-document{font-size:14px}.policy-sections p,.policy-sections li{font-size:14px}.policy-article-contact{padding:19px 16px}}

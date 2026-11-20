@@ -1,0 +1,790 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                                        String                  @id @default(cuid())
+  email                                     String                  @unique
+  emailVerified                             DateTime?
+  emailOtp                                  String?
+  emailOtpExpiresAt                         DateTime?
+  emailOtpAttempts                          Int                     @default(0)
+  phone                                     String?                 @unique
+  passwordHash                              String?
+  fullName                                  String
+  username                                  String?                 @unique
+  refCode                                   String                  @unique
+  referredById                              String?
+  role                                      String                  @default("MEMBER")
+  status                                    String                  @default("ACTIVE")
+  kycStatus                                 String                  @default("NOT_SUBMITTED")
+  language                                  String                  @default("vi")
+  twoFaSecret                               String?
+  withdrawPasswordHash                      String?
+  withdrawPwFailedCount                     Int                     @default(0)
+  withdrawPwFailedAt                        DateTime?
+  loginAlertEnabled                         Boolean                 @default(true)
+  agentRank                                 Int                     @default(0)
+  createdAt                                 DateTime                @default(now())
+  updatedAt                                 DateTime
+  usdtWallet                                String?
+  lastSeenAt                                DateTime?
+  Account                                   Account[]
+  Commission_Commission_sourceUserIdToUser  Commission[]            @relation("Commission_sourceUserIdToUser")
+  Commission_Commission_beneficiaryIdToUser Commission[]            @relation("Commission_beneficiaryIdToUser")
+  FarmInvestment                            FarmInvestment[]
+  GamePointConversion                       GamePointConversion[]
+  GamePointDebit                            GamePointDebit[]
+  GamePointLinkedAccount                    GamePointLinkedAccount?
+  GamePointSyncOutbox                       GamePointSyncOutbox[]
+  Investment                                Investment[]
+  KycRequest                                KycRequest?
+  Project                                   Project[]
+  Session                                   Session[]
+  shopFavorites                             ShopFavorite[]
+  shopOrders                                ShopOrder[]
+  transactions                              Transaction[]
+  User                                      User?                   @relation("UserToUser", fields: [referredById], references: [id])
+  other_User                                User[]                  @relation("UserToUser")
+  wallet                                    Wallet?
+  YwhEarlyReward                            YwhEarlyReward?
+  YwhLock                                   YwhLock[]
+
+  @@index([referredById])
+}
+
+model Wallet {
+  id                 String    @id @default(cuid())
+  userId             String    @unique
+  balanceGXL         Float     @default(0)
+  lockedGXL          Float     @default(0)
+  totalEarnedRef     Float     @default(0)
+  totalDeposited     Float     @default(0)
+  totalWithdrawn     Float     @default(0)
+  balanceGXLR        Float     @default(0)
+  totalGxlrEarned    Float     @default(0)
+  totalStakedGXL     Float     @default(0)
+  totalRoyalty       Float     @default(0)
+  balanceUsdt        Float     @default(0)
+  totalDepositedUsdt Float     @default(0)
+  totalWithdrawnUsdt Float     @default(0)
+  balanceYwh         Float     @default(0)
+  lockedYwh          Float     @default(0)
+  streak             Int       @default(0)
+  lastLogin          DateTime?
+  updatedAt          DateTime  @updatedAt
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String
+  amount      Float
+  currency    String   @default("GXL")
+  status      String   @default("PENDING")
+  externalRef String?
+  metadata    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, type, status])
+  @@index([createdAt])
+}
+
+model ShopCategory {
+  id         String        @id @default(cuid())
+  slug       String        @unique
+  name       String
+  sortOrder  Int           @default(0)
+  isActive   Boolean       @default(true)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  isFeatured Boolean       @default(false)
+  products   ShopProduct[]
+}
+
+model ShopProduct {
+  id          String         @id @default(cuid())
+  categoryId  String?
+  slug        String         @unique
+  name        String
+  description String?
+  rarity      String         @default("Thuong")
+  priceGxl    Float
+  stock       Int            @default(0)
+  imageData   String?
+  isActive    Boolean        @default(true)
+  soldCount   Int            @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  favorites   ShopFavorite[]
+  orders      ShopOrder[]
+  category    ShopCategory?  @relation(fields: [categoryId], references: [id])
+
+  @@index([categoryId, isActive])
+  @@index([name])
+}
+
+model ShopFavorite {
+  id        String      @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime    @default(now())
+  product   ShopProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([userId, createdAt])
+}
+
+model ShopOrder {
+  id        String      @id @default(cuid())
+  userId    String
+  productId String
+  quantity  Int         @default(1)
+  totalGxl  Float
+  status    String      @default("PAID")
+  note      String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  user      User        @relation(fields: [userId], references: [id])
+  product   ShopProduct @relation(fields: [productId], references: [id])
+
+  @@index([userId, status])
+  @@index([createdAt])
+}
+
+model ShopBanner {
+  id        String   @id @default(cuid())
+  title     String
+  subtitle  String?
+  imageData String?
+  linkUrl   String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+}
+
+model ShopNews {
+  id         String            @id @default(cuid())
+  slug       String            @unique
+  title      String
+  excerpt    String?
+  content    String?
+  imageData  String?
+  isActive   Boolean           @default(true)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  categoryId String?
+  category   ShopNewsCategory? @relation(fields: [categoryId], references: [id])
+
+  @@index([isActive, createdAt])
+  @@index([categoryId, isActive])
+}
+
+model ShopNewsCategory {
+  id        String     @id @default(cuid())
+  slug      String     @unique
+  name      String
+  sortOrder Int        @default(0)
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  news      ShopNews[]
+}
+
+model Account {
+  id                String  @id
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  User              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model AgentRank {
+  id                 String   @id
+  level              Int      @unique
+  nameVi             String
+  nameEn             String
+  requiredF1Active   Int      @default(0)
+  requiredTeamSize   Int      @default(0)
+  requiredTeamVolume Float    @default(0)
+  monthlyBonusGxl    Float    @default(0)
+  globalShareRate    Float    @default(0)
+  perksVi            String?
+  perksEn            String?
+  isActive           Boolean  @default(true)
+  sortOrder          Int      @default(0)
+  updatedAt          DateTime
+}
+
+model AuditLog {
+  id         String   @id
+  actorId    String
+  actorEmail String
+  action     String
+  target     String?
+  metadata   String?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([action])
+  @@index([actorId, createdAt])
+}
+
+model BurnEvent {
+  id          String   @id
+  quarter     String?
+  tokenType   String   @default("GXL")
+  amount      Float
+  txHash      String?
+  reason      String
+  triggeredBy String?
+  executedAt  DateTime @default(now())
+
+  @@index([executedAt])
+  @@index([quarter])
+}
+
+model Commission {
+  id                                  String    @id
+  beneficiaryId                       String
+  sourceUserId                        String
+  sourceTxId                          String?
+  eventType                           String
+  rateSnapshot                        Float
+  amount                              Float
+  currency                            String    @default("GXL")
+  maturesAt                           DateTime?
+  paid                                Boolean   @default(true)
+  paidAt                              DateTime?
+  createdAt                           DateTime  @default(now())
+  User_Commission_sourceUserIdToUser  User      @relation("Commission_sourceUserIdToUser", fields: [sourceUserId], references: [id])
+  User_Commission_beneficiaryIdToUser User      @relation("Commission_beneficiaryIdToUser", fields: [beneficiaryId], references: [id])
+
+  @@index([sourceUserId])
+  @@index([beneficiaryId, paid])
+  @@index([beneficiaryId, createdAt])
+}
+
+model DepositAddress {
+  idx        Int       @id @default(autoincrement())
+  address    String    @unique
+  userId     String?   @unique
+  assignedAt DateTime?
+}
+
+model ExchangeRate {
+  id           String   @id
+  fromCurrency String
+  toCurrency   String
+  rate         Float
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+
+  @@unique([fromCurrency, toCurrency, isActive])
+}
+
+model FarmInvestment {
+  id              String      @id
+  userId          String
+  productId       String
+  principalUsdt   Float
+  roiMonthlyPct   Float
+  months          Int
+  startAt         DateTime    @default(now())
+  daysCredited    Int         @default(0)
+  lastCreditedAt  DateTime?
+  totalProfitUsdt Float       @default(0)
+  status          String      @default("ACTIVE")
+  createdAt       DateTime    @default(now())
+  FarmProduct     FarmProduct @relation(fields: [productId], references: [id])
+  User            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([userId, status])
+}
+
+model FarmProduct {
+  id             String           @id
+  key            String           @unique
+  kind           String           @default("ANIMAL")
+  nameVi         String
+  nameEn         String
+  emoji          String           @default("")
+  costUsdt       Float
+  months         Int
+  roiMonthlyPct  Float
+  productVi      String           @default("")
+  productEn      String           @default("")
+  sortOrder      Int              @default(0)
+  isActive       Boolean          @default(true)
+  FarmInvestment FarmInvestment[]
+}
+
+model GamePointSyncOutbox {
+  id                  String    @id
+  sourceTransactionId String    @unique
+  userId              String
+  pointAmount         String
+  occurredAt          DateTime
+  source              String    @default("ywonder-web-usdt-to-point")
+  status              String    @default("PENDING")
+  attempts            Int       @default(0)
+  lastError           String?
+  nextAttemptAt       DateTime  @default(now())
+  sentAt              DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime
+  User                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([status, nextAttemptAt])
+}
+
+model Investment {
+  id             String    @id
+  userId         String
+  projectId      String
+  amount         Float
+  roiSnapshot    Float
+  startAt        DateTime  @default(now())
+  endAt          DateTime
+  expectedPayout Float
+  actualPayout   Float?
+  status         String    @default("ACTIVE")
+  daysCredited   Int       @default(0)
+  lastCreditedAt DateTime?
+  createdAt      DateTime  @default(now())
+  Project        Project   @relation(fields: [projectId], references: [id])
+  User           User      @relation(fields: [userId], references: [id])
+
+  @@index([endAt, status])
+  @@index([userId, status])
+}
+
+model KycRequest {
+  id              String    @id
+  userId          String    @unique
+  documents       String
+  docType         String    @default("CCCD")
+  idNumber        String?
+  fullNameOnCard  String?
+  dateOfBirth     String?
+  address         String?
+  idCardFrontData String?
+  idCardBackData  String?
+  selfieData      String?
+  status          String    @default("PENDING")
+  rejectReason    String?
+  submittedAt     DateTime  @default(now())
+  reviewedAt      DateTime?
+  reviewedBy      String?
+  User            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id
+  userId    String
+  emoji     String
+  textVi    String
+  textEn    String
+  link      String?
+  unread    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([userId, unread, createdAt])
+}
+
+model PaymentNetwork {
+  id             String   @id
+  name           String
+  networkCode    String
+  token          String   @default("USDT")
+  depositAddress String
+  qrImageData    String?
+  rateGxlPerUsdt Float    @default(25)
+  minDeposit     Float    @default(10)
+  maxDeposit     Float    @default(26000)
+  minWithdraw    Float    @default(10)
+  maxWithdraw    Float    @default(26000)
+  withdrawFee    Float    @default(3)
+  warningText    String?
+  isActive       Boolean  @default(true)
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime
+
+  @@index([isActive, sortOrder])
+}
+
+model PointLegacyResidualAudit {
+  eventId               String  @id
+  operationId           String
+  remediationPlanSha256 String
+  approvalSha256        String
+  accountRef            String
+  valueRef              String
+  sourceKind            String
+  sourceRecordId        String
+  sourceField           String
+  originalStorageType   String
+  originalValueText     String
+  originalValueHex      String
+  sourcePointAttos      String
+  roundedPointMicros    String
+  residualPointAttos    String
+  normalizedValueText   String
+  action                String
+  targetEventId         String?
+  occurredAt            String
+  createdAt             String  @default("strftime('%Y-%m-%dT%H:%M:%fZ','now')")
+
+  @@unique([operationId, valueRef, action], map: "sqlite_autoindex_PointLegacyResidualAudit_2")
+}
+
+model PresaleRound {
+  id                  String                @id
+  slug                String                @unique
+  name                String
+  priceUsdt           Float
+  totalSupply         Float
+  sold                Float                 @default(0)
+  vestingMonths       Int
+  vestingTgePercent   Float                 @default(10)
+  startAt             DateTime?
+  endAt               DateTime?
+  status              String
+  sortOrder           Int                   @default(0)
+  PresaleSubscription PresaleSubscription[]
+}
+
+model PresaleSubscription {
+  id           String       @id
+  userId       String
+  roundId      String
+  amountUsdt   Float
+  amountGxlr   Float
+  txHash       String?
+  status       String       @default("PENDING")
+  releasedGxlr Float        @default(0)
+  createdAt    DateTime     @default(now())
+  PresaleRound PresaleRound @relation(fields: [roundId], references: [id])
+
+  @@index([userId, status])
+}
+
+model Project {
+  id                      String       @id
+  slug                    String       @unique
+  emoji                   String
+  bgColor                 String
+  nameVi                  String
+  nameEn                  String
+  categoryVi              String
+  categoryEn              String
+  descriptionVi           String
+  descriptionEn           String
+  roi                     Float
+  durationDays            Int
+  minInvest               Float
+  maxInvest               Float?
+  totalCap                Float
+  currentRaised           Float        @default(0)
+  status                  String       @default("OPEN")
+  createdById             String?
+  reviewedById            String?
+  reviewedAt              DateTime?
+  rejectReason            String?
+  businessLicenseData     String?
+  excludedFromCommission  Boolean      @default(false)
+  openAt                  DateTime?
+  closeAt                 DateTime?
+  createdAt               DateTime     @default(now())
+  address                 String?
+  businessType            String?
+  deliveryMethod          String?
+  invoiceEmail            String?
+  licenseNumber           String?
+  phone                   String?
+  productImages           String?
+  businessLicenseBackData String?
+  imageData               String?
+  Investment              Investment[]
+  User                    User?        @relation(fields: [createdById], references: [id])
+
+  @@index([createdById])
+  @@index([status, createdAt])
+}
+
+model Quest {
+  id               String          @id
+  slug             String          @unique
+  emoji            String
+  titleVi          String
+  titleEn          String
+  type             String
+  requirementType  String
+  requirementValue Float
+  rewardGxl        Float
+  startAt          DateTime?
+  endAt            DateTime?
+  isActive         Boolean         @default(true)
+  sortOrder        Int             @default(0)
+  createdAt        DateTime        @default(now())
+  QuestProgress    QuestProgress[]
+}
+
+model QuestProgress {
+  id          String    @id
+  userId      String
+  questId     String
+  progress    Float     @default(0)
+  completed   Boolean   @default(false)
+  claimed     Boolean   @default(false)
+  resetAt     DateTime?
+  completedAt DateTime?
+  claimedAt   DateTime?
+  Quest       Quest     @relation(fields: [questId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, questId])
+  @@index([userId, claimed])
+}
+
+model RedeemOrder {
+  id               String    @id
+  userId           String
+  itemId           String
+  quantity         Int       @default(1)
+  totalGxl         Float
+  redeemCode       String    @unique
+  qrPayload        String?
+  status           String    @default("READY")
+  usedAt           DateTime?
+  partnerScannedAt DateTime?
+  createdAt        DateTime  @default(now())
+  StoreItem        StoreItem @relation(fields: [itemId], references: [id])
+
+  @@index([userId, status])
+}
+
+model ReferralConfig {
+  id          String   @id
+  eventType   String   @unique
+  rate        Float?
+  fixedAmount Float?
+  isActive    Boolean  @default(true)
+  updatedBy   String?
+  updatedAt   DateTime
+}
+
+model RoyaltyDistribution {
+  id              String          @id
+  quarter         String          @unique
+  totalProfit     Float
+  perGxlrShare    Float
+  totalGxlrSupply Float
+  executedAt      DateTime?
+  status          String          @default("PENDING")
+  createdAt       DateTime        @default(now())
+  RoyaltyPayout   RoyaltyPayout[]
+}
+
+model RoyaltyPayout {
+  id                  String              @id
+  distributionId      String
+  userId              String
+  gxlrHeldAt          Float
+  gxlReceived         Float
+  paidAt              DateTime            @default(now())
+  RoyaltyDistribution RoyaltyDistribution @relation(fields: [distributionId], references: [id], onDelete: Cascade)
+
+  @@unique([distributionId, userId])
+  @@index([userId, paidAt])
+}
+
+model Session {
+  id           String   @id
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model StakingPosition {
+  id         String    @id
+  userId     String
+  amountGxl  Float
+  gxlrMinted Float
+  apy        Float
+  startAt    DateTime  @default(now())
+  endAt      DateTime?
+  status     String    @default("ACTIVE")
+
+  @@index([userId, status])
+}
+
+model StoreItem {
+  id                     String        @id
+  slug                   String        @unique
+  emoji                  String
+  nameVi                 String
+  nameEn                 String
+  categoryVi             String
+  categoryEn             String
+  priceGxl               Float
+  stock                  Int
+  soldCount              Int           @default(0)
+  partnerName            String?
+  isActive               Boolean       @default(true)
+  excludedFromCommission Boolean       @default(false)
+  createdAt              DateTime      @default(now())
+  RedeemOrder            RedeemOrder[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model YwhEarlyReward {
+  id             String    @id
+  userId         String    @unique
+  baseYwh        Float     @default(0)
+  monthsCredited Int       @default(0)
+  totalBonusYwh  Float     @default(0)
+  lastCreditedAt DateTime?
+  createdAt      DateTime  @default(now())
+  User           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model YwhLock {
+  id             String   @id
+  userId         String
+  principalUsdt  Float
+  priceUsdt      Float    @default(0.06)
+  totalYwh       Float
+  tgeYwh         Float
+  tgeSellableAt  DateTime
+  tgeReleased    Boolean  @default(false)
+  releasedYwh    Float    @default(0)
+  cliffMonths    Int      @default(6)
+  monthlyPercent Float    @default(7.5)
+  status         String   @default("LOCKED")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime
+  User           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+}
+
+model GamePointConversion {
+  id                       String                   @id
+  requestId                String                   @unique
+  sourceTransactionId      String                   @unique
+  outboxId                 String                   @unique
+  userId                   String
+  usdtMicros               String
+  pointMicros              String
+  rateVersionId            String
+  rateMicros               String
+  roundingRemainder        String                   @default("0")
+  status                   String                   @default("PENDING")
+  lastError                String?
+  sentAt                   DateTime?
+  createdAt                DateTime                 @default(now())
+  updatedAt                DateTime
+  PointExchangeRateVersion PointExchangeRateVersion @relation(fields: [rateVersionId], references: [id])
+  User                     User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
+}
+
+model GamePointDebit {
+  id                       String                   @id
+  requestId                String                   @unique
+  reservationId            String                   @unique
+  sourceTransactionId      String                   @unique
+  userId                   String
+  gamePlayerId             String
+  targetCurrency           String
+  pointAmount              Int
+  pointMicros              String
+  grossTargetMicros        String
+  feeBps                   Int
+  feeMicros                String
+  netTargetMicros          String
+  rateVersionId            String
+  rateMicros               String
+  roundingRemainder        String                   @default("0")
+  feeRoundingRemainder     String                   @default("0")
+  requestFingerprint       String
+  purpose                  String
+  source                   String
+  occurredAt               DateTime
+  status                   String                   @default("RESERVE_PENDING")
+  attempts                 Int                      @default(0)
+  lastError                String?
+  nextAttemptAt            DateTime                 @default(now())
+  reservedAt               DateTime?
+  settledAt                DateTime?
+  capturedAt               DateTime?
+  releasedAt               DateTime?
+  createdAt                DateTime                 @default(now())
+  updatedAt                DateTime
+  PointExchangeRateVersion PointExchangeRateVersion @relation(fields: [rateVersionId], references: [id])
+  User                     User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, nextAttemptAt])
+  @@index([userId, createdAt])
+}
+
+model GamePointLinkedAccount {
+  userId       String   @id
+  gamePlayerId String   @unique
+  linkedBy     String
+  note         String?
+  linkedAt     DateTime @default(now())
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PointExchangeRateVersion {
+  id                  String                @id
+  pair                String
+  rateMicros          String
+  isActive            Int                   @default(1)
+  effectiveAt         DateTime              @default(now())
+  createdBy           String
+  sourceRateId        String?
+  createdAt           DateTime              @default(now())
+  GamePointConversion GamePointConversion[]
+  GamePointDebit      GamePointDebit[]
+
+  @@index([pair, effectiveAt])
+}

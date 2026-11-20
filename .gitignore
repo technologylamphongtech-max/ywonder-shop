@@ -1,0 +1,47 @@
+# Local settings and credentials
+.env*
+!.env.example
+*.pem
+*.key
+
+# Dependencies and generated output
+node_modules/
+.next/
+.next-build*/
+oldbuild/
+tsconfig.tsbuildinfo
+*.log
+local-next.*
+__pycache__/
+*.pyc
+
+# Local databases and backups
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.tgz
+*.tar.gz
+*.zip
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Historical one-off imports, demos and deployment copies kept locally
+/QA-REPORT.md
+/catalog-import.sql
+/catalog_import.py
+/deploy-*.sh
+/dummyjson-products.json
+/fetch_openverse.*
+/fix-oto.sql
+/fix_oto.py
+/hub-shop-link-page.tsx
+/make_sku_cleanup.py
+/openverse-fallback.json
+/seed-products.sql
+/seed_products.py
+/sku-cleanup.sql

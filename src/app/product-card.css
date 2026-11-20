@@ -1,0 +1,35 @@
+/* Keep the price readable and both actions aligned at every card width. */
+.live-market .product-card{display:flex;flex-direction:column}
+.live-market .product-photo{flex-shrink:0}
+.live-market .product-body{display:flex;flex:1;flex-direction:column;min-width:0}
+.live-market .product-category{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.live-market .product-title{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:2.9em;line-height:1.45;margin-top:10px;padding:0}
+.live-market .product-sku{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:8px;line-height:1.5}
+.live-market .product-price{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;flex-wrap:nowrap;gap:12px;margin-top:auto;padding-top:14px;border-top:1px solid var(--yw-edge-ffffff0f, #ffffff0f)}
+.live-market .product-price>b{display:block;width:100%;min-width:0;margin:0;color:var(--yw-text-ff9b52, #ff9b52);font-size:calc(clamp(15px,1.5vw,19px) * var(--yw-text-scale, 1));line-height:1.4;font-weight:800;letter-spacing:-.035em;text-align:left;white-space:nowrap;font-variant-numeric:tabular-nums}
+.live-market .product-actions{display:grid;grid-template-columns:40px minmax(0,1fr);align-items:center;gap:8px;width:100%}
+.live-market .product-price .product-actions>button{display:flex;align-items:center;justify-content:center;width:100%;height:40px;min-width:0;padding:0;border-radius:11px;line-height:1;transition:background .16s,border-color .16s,color .16s}
+.live-market .product-price .product-favorite-button{color:var(--yw-text-b8ccff, #b8ccff);background:var(--yw-surface-ffffff05, #ffffff05);border:1px solid var(--yw-edge-ffffff24, #ffffff24)}
+.live-market .product-price .product-favorite-button[aria-pressed=true]{color:var(--yw-text-ff9bbf, #ff9bbf);background:var(--yw-surface-ff71a51a, #ff71a51a);border-color:var(--yw-edge-ff91b34d, #ff91b34d)}
+.live-market .product-price .product-add-button{gap:7px;padding:0 10px;color:var(--yw-on-accent-f5f8ff, #f5f8ff);background:var(--yw-surface-285ccb, #285ccb);border:1px solid var(--yw-edge-4977d8, #4977d8);font-size:calc(12px * var(--yw-text-scale, 1));font-weight:700;white-space:nowrap}
+.live-market .product-price svg{display:block;flex-shrink:0;width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.live-market .product-price .product-favorite-button[aria-pressed=true] svg{fill:currentColor}
+.live-market .product-price .product-favorite-button:hover{background:var(--yw-surface-34436a, #34436a);border-color:var(--yw-edge-718fc8, #718fc8);color:var(--yw-text-fff, #fff)}
+.live-market .product-price .product-add-button:hover:not(:disabled){background:var(--yw-surface-3373ed, #3373ed);border-color:var(--yw-edge-80a5ef, #80a5ef)}
+.live-market .product-price button:focus-visible{outline:2px solid var(--yw-edge-a1c2ff, #a1c2ff);outline-offset:3px}
+.live-market .product-price .product-add-button:disabled{background:var(--yw-surface-2b2638, #2b2638);border-color:var(--yw-edge-4b435a, #4b435a);color:var(--yw-text-afa7bc, #afa7bc)}
+@media(max-width:640px){
+ .live-market .product-price{gap:11px;padding-top:12px}
+ .live-market .product-price>b{font-size:calc(clamp(14px,4.2vw,18px) * var(--yw-text-scale, 1));line-height:1.35}
+ .live-market .product-actions{grid-template-columns:42px minmax(0,1fr);gap:6px}
+ .live-market .product-price .product-actions>button{height:42px;border-radius:11px}
+ .live-market .product-price .product-add-button{gap:5px;padding:0 6px;font-size:calc(14px * var(--yw-text-scale, 1));line-height:1.2}
+ .live-market .product-price svg{width:19px;height:19px}
+ .live-market .product-add-label{display:none}
+}
+@media(max-width:360px){
+ .live-market .product-price .product-add-button svg{display:none}
+}
+@media(min-width:520px) and (max-width:640px){
+ .live-market .product-add-label{display:inline}
+}
